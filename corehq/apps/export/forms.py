@@ -30,7 +30,7 @@ from corehq.apps.groups.models import Group
 from corehq.apps.reports.models import HQUserType
 from corehq.apps.reports.util import datespan_from_beginning
 from corehq.apps.hqwebapp.crispy import HQFormHelper, HQModalFormHelper
-from corehq.apps.hqwebapp.widgets import DateRangePickerWidget, Select2AjaxV3
+from corehq.apps.hqwebapp.widgets import DateRangePickerWidget, Select2AjaxV4
 from corehq.pillows import utils
 
 from crispy_forms import layout as crispy
@@ -267,12 +267,12 @@ class DashboardFeedFilterForm(forms.Form):
     emwf_case_filter = forms.Field(
         label=ugettext_lazy("Case Owner(s)"),
         required=False,
-        widget=Select2AjaxV3(multiple=True),
+        widget=Select2AjaxV4(multiple=True),
     )
     emwf_form_filter = forms.Field(
         label=ugettext_lazy("User(s)"),
         required=False,
-        widget=Select2AjaxV3(multiple=True),
+        widget=Select2AjaxV4(multiple=True),
     )
     date_range = forms.ChoiceField(
         label=ugettext_lazy("Date Range"),
@@ -482,6 +482,8 @@ class DashboardFeedFilterForm(forms.Form):
                 if choice_tuple:
                     emwf_data.append({"id": choice_tuple[0], "text": choice_tuple[1]})
 
+            # TODO: existing emwf_data values don't show up in select2s in Edit Filters popup,
+            # and filters 500 when saving
             return {
                 "date_range": date_period.period_type if date_period else None,
                 "days": date_period.days if date_period else None,
